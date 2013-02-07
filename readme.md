@@ -25,6 +25,14 @@ rectangle send: "rect".  Here is a complete list of commands:
   <dd>Change the current color to yellow</dd>
   <dt>CYAN</td>
   <dd>Change the current color to cyan</dd>
+  <dt>char</dt>
+  <dd>Switch from command mode to text display mode</dd>
   <dt>^</dt>
-  <dd>Switch to command mode</dd>
+  <dd>Switch from text display mode to command mode</dd>
+  <dt>radius</dt>
+  <dd>Set the radius (for circle)</dd>
+  <dt>width</dt>
+  <dd>Set the width (for rect) </dd>
+  <dt>height</dt>
+  <dd>Set the height (for rect) </dd>
 </dl>
