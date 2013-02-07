@@ -6,4 +6,15 @@ to easily draw menus and display data from your PC, another Arduino or even a Ra
 It uses a serial interface with a simple set of commands for example, to draw a circle send "circle", to draw a
 rectangle send: "rect".  Here is a complete list of commands:
 
+*clear
+*rect
+*x
+*y
+*circle
+*BLUE
+*RED
+*YELLOW
+*CYAN
+*^
+
 
