@@ -3,7 +3,7 @@
 #include <TFT.h>
 #include <PSTRStrings.h>
 
-#define DEMO
+// #define DEMO
 
 #define TS_MINX 140
 #define TS_MAXX 900
@@ -82,23 +82,37 @@ void setup()
   #endif
 }
 
-int readDec ()
+int readDec (int numDigits)
 {
   char ch;
   int total = 0;
+  int count = 0;
+  bool negative = false;
   while (true)
   {
     if (Serial.available()) // block on user input
     {
       ch = Serial.read();
-      // Exit if number if not a decimal
-      if ((ch < '0') || (ch > '9'))
-        break;
-              
+      
+      if (ch == '-') 
+        negative = true;
+      else 
+      {  
+        // Exit if number if not a decimal
+        if ((ch < '0') || (ch > '9'))
+          break;
+        count++;  
+      }
+      
       total *= 10;
       total += ch - '0';
+      if (count == numDigits)
+         break;
     }  
   }
+
+  if (negative)
+    total = 0 - total;
     
   return total;
 }
@@ -109,18 +123,16 @@ void handleCh (char ch)
   switch (gotCommand)
   {
     case 0:
-      Serial.println ( "now in character mode" );
       commandMode = false;
       break;
     case 1: // fontsize
-      fontsize = readDec ();
-      Serial.print ( "fontsize: " ); Serial.println ( fontsize );
+      fontsize = readDec (1);
       break;  
-    case 2: // x1
-      deltax = readDec();
+    case 2: // deltax
+      deltax = readDec(3);
       break;
-    case 3: 
-      deltay = readDec();
+    case 3: // deltay
+      deltay = readDec(3);
       break;  
     case 4: // circle
       Tft.drawCircle(x,y,radius,color);
@@ -140,28 +152,26 @@ void handleCh (char ch)
       color = RED;  
       break;
     case 10: // radius
-      radius = readDec();
+      radius = readDec(3);
       break;
     case 11: // width
-      width = readDec();
+      width = readDec(3);
       break;
     case 12: // height
-      height = readDec();
+      height = readDec(3);
       break;  
     case 13: // BLUE
       color = BLUE;
       break;
     case 14: // x
-      x = readDec ();
+      x = readDec (3);
       if (x > MAXX)
         x = MAXX;      
-      Serial.print ( "x: " ); Serial.println ( x );
       break;
     case 15: // y
-      y = readDec ();
+      y = readDec (3);
       if (y > MAXY)
          y = MAXY;
-      Serial.print ( "y: " ); Serial.println ( y );
       break;  
     case 16: // clear
       Tft.paintScreenBlack();
@@ -174,6 +184,7 @@ void handleCh (char ch)
   }
 }
 
+#ifdef DEMO
 void doDemo ()
 {
   static int demoState = 0;
@@ -220,6 +231,7 @@ void doDemo ()
     break;
   }
 }
+#endif
 
 void loop()
 {
@@ -282,13 +294,10 @@ void loop()
        */
        touchTimeout = millis() + 500;
        
+#ifdef DEMO
        if (state == 1)
-       {
          doDemo();
-       }
+#endif
     }  
   }
-
-  
-  
 }
